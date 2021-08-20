@@ -1,7 +1,11 @@
 mod nvix;
 
-use nvix::brew_install;
+use nvix::Feature;
 
 fn main() {
-    brew_install("nvm")
+    let feature = Feature {
+        name: String::from("neovim"),
+        system_deps: vec![String::from("neovim"), String::from("python")],
+    };
+    feature.execute();
 }

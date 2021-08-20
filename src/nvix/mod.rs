@@ -1,3 +1,5 @@
+mod modules;
+
 use std::process::Command;
 
 #[macro_export]
@@ -31,4 +33,24 @@ pub fn brew_install(pkg: &str) {
         return;
     }
     status!("brew", "install", pkg);
+}
+
+pub struct Feature {
+    pub name: String,
+    pub system_deps: Vec<String>,
+}
+
+impl Feature {
+    pub fn execute(&self) {
+        status!("echo", "sync feature", &self.name);
+        for dep in self.system_deps.iter() {
+            brew_install(dep);
+        }
+    }
+}
+
+pub trait PkgInstaller {
+    fn init() -> Self;
+    fn check_installed(&self, pkg: &str) -> bool;
+    fn install(&self, pkg: &str);
 }
