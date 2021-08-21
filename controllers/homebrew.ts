@@ -1,37 +1,38 @@
-export class Homebrew {
-  installed: string[];
+import { output, execute } from '../util/command.ts';
 
-  constructor(installed: string[]) {
-    this.installed = installed;
+export class Homebrew {
+  private installed: Set<string>;
+  private packages: Set<string>;
+
+  private constructor() {
+    this.installed = new Set();
+    this.packages = new Set();
   }
 
   static async new(): Promise<Homebrew> {
-    const installed = (await output('brew', 'list')).split('\n');
-    return new Homebrew(installed);
+    const list = (await output('brew', 'list')).split('\n');
+    const brew = new Homebrew();
+    list.forEach(pkg => {
+      brew.installed.add(pkg);
+      const words = pkg.split('@');
+      if (words.length > 1) {
+        brew.installed.add(words[0]);
+      }
+    })
+    return brew;
+  }
+
+  pkg(...pkgs: string[]) {
+    pkgs.forEach(pkg => this.packages.add(pkg));
+  }
+
+  async sync(): Promise<void> {
+    await execute('brew', 'update');
+    await execute('brew', 'upgrade');
+    this.packages.forEach(async (pkg: string) => {
+      if (!this.installed.has(pkg)) {
+        await execute('brew', 'install', pkg);
+      }
+    })
   }
 }
-
-async function output(...command: string[]): Promise<string> {
-  const process =  Deno.run({cmd: command, stdout: 'piped', stderr: 'piped'})
-  const status = await process.status();
-  const stdout = await process.output();
-  const stderr = await process.stderrOutput();
-  if (!status.success) {
-    throw Error(new TextDecoder().decode(stderr));
-  }
-  return (new TextDecoder().decode(stdout));
-}
-
-async function execute(...command: string[]): Promise<void> {
-  const process =  Deno.run({cmd: command, stderr: 'piped'})
-  const status = await process.status();
-  const stderr = await process.stderrOutput();
-  if (!status.success) {
-    throw Error(new TextDecoder().decode(stderr));
-  }
-  return;
-}
-
-const brew = await Homebrew.new();
-console.log(brew.installed);
-execute("nvim");
