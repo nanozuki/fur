@@ -7,6 +7,7 @@ const storage = {
     if (!this.latest) {
       await execute("brew", "update");
       await execute("brew", "upgrade");
+      this.latest = true;
     }
     if (this.installed.size === 0) {
       const list = (await output("brew", "list")).split("\n");
@@ -31,10 +32,14 @@ export class Homebrew {
 
   public async exec(): Promise<void> {
     await storage.init();
-    this.packages.forEach(async (pkg: string) => {
+    for (let pkg of this.packages) {
       if (!storage.installed.has(pkg)) {
         await execute("brew", "install", pkg);
       }
-    });
+    }
   }
+}
+
+export function brew(...pkgs: string[]): Homebrew {
+  return new Homebrew(...pkgs);
 }
