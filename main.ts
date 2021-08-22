@@ -1,13 +1,20 @@
-import { Homebrew } from './controllers/homebrew.ts'
+import { Homebrew } from "./controllers/homebrew.ts";
 
 interface Controller {
-    sync(): Promise<void>
+  exec(): Promise<void>;
+}
+
+async function neovix(...controllers: Controller[]): Promise<void> {
+  for (c in controllers) {
+    await c.exec();
+  }
 }
 
 async function main() {
-    const brew = await Homebrew.new();
-    brew.pkg('fish', 'neovim');
-    await brew.sync()
+  await neovix(
+    new Homebrew("fish"),
+    new Homebrew("neovim"),
+  );
 }
 
 await main();

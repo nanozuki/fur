@@ -1,38 +1,40 @@
-import { output, execute } from '../util/command.ts';
+import { execute, output } from "../util/command.ts";
+
+const storage = {
+  installed: new Set<string>(),
+  latest: false,
+  init: async function (): Promise<void> {
+    if (!this.latest) {
+      await execute("brew", "update");
+      await execute("brew", "upgrade");
+    }
+    if (this.installed.size === 0) {
+      const list = (await output("brew", "list")).split("\n");
+      list.forEach((pkg) => {
+        this.installed.add(pkg);
+        const words = pkg.split("@");
+        if (words.length > 1) {
+          this.installed.add(words[0]);
+        }
+      });
+    }
+  },
+};
 
 export class Homebrew {
-  private installed: Set<string>;
   private packages: Set<string>;
 
-  private constructor() {
-    this.installed = new Set();
+  public constructor(...pkgs: string[]) {
     this.packages = new Set();
+    pkgs.forEach((pkg) => this.packages.add(pkg));
   }
 
-  static async new(): Promise<Homebrew> {
-    const list = (await output('brew', 'list')).split('\n');
-    const brew = new Homebrew();
-    list.forEach(pkg => {
-      brew.installed.add(pkg);
-      const words = pkg.split('@');
-      if (words.length > 1) {
-        brew.installed.add(words[0]);
-      }
-    })
-    return brew;
-  }
-
-  pkg(...pkgs: string[]) {
-    pkgs.forEach(pkg => this.packages.add(pkg));
-  }
-
-  async sync(): Promise<void> {
-    await execute('brew', 'update');
-    await execute('brew', 'upgrade');
+  public async exec(): Promise<void> {
+    await storage.init();
     this.packages.forEach(async (pkg: string) => {
-      if (!this.installed.has(pkg)) {
-        await execute('brew', 'install', pkg);
+      if (!storage.installed.has(pkg)) {
+        await execute("brew", "install", pkg);
       }
-    })
+    });
   }
 }
