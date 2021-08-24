@@ -1,7 +1,11 @@
 import { Regulator } from "./regulators/regulator.ts";
 
-class Feature {
+// Feature for neovim feature
+export class Feature {
   regulators: Regulator[] = [];
+  plugins: (string | Plugin)[] = [];
+  nvimConfigs: NeovimConfig[] = [];
+  config = "";
   constructor(
     public name: string,
   ) {}
@@ -11,8 +15,43 @@ class Feature {
       await rg.exec();
     }
   }
+
+  useRegulators(...regulators: Regulator[]): Feature {
+    this.regulators = this.regulators.concat(...regulators);
+    return this;
+  }
+
+  usePlugins(...plugins: (string | Plugin)[]): Feature {
+    this.plugins = this.plugins.concat(...plugins);
+    return this;
+  }
+
+  useConfigFile(
+    source: string,
+    value: Record<string, unknown> | undefined,
+  ): Feature {
+    this.nvimConfigs.push({
+      source: source,
+      value: value,
+    });
+    return this;
+  }
+
+  useConfig(config: string): Feature {
+    this.config = config;
+    return this;
+  }
 }
 
-export function feature(name: string, ...Regulator: Regulator[]): Feature {
-  return new Feature(name, ...Regulator);
+interface NeovimConfig {
+  source: string;
+  value: Record<string, unknown> | undefined;
+}
+
+interface Plugin {
+  name: string;
+}
+
+export function feature(name: string): Feature {
+  return new Feature(name);
 }
