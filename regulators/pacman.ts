@@ -25,7 +25,7 @@ export class Pacman {
 
   public async exec(): Promise<void> {
     await storage.init();
-    for (let pkg of this.packages) {
+    for (const pkg of this.packages) {
       await execute(storage.bin, "-S", "--needed", pkg);
     }
   }

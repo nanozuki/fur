@@ -32,7 +32,7 @@ export class Homebrew {
 
   public async exec(): Promise<void> {
     await storage.init();
-    for (let pkg of this.packages) {
+    for (const pkg of this.packages) {
       if (!storage.installed.has(pkg)) {
         await execute("brew", "install", pkg);
       }

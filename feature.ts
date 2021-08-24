@@ -1,21 +1,18 @@
-import { Controller } from "./controllers/controller.ts";
+import { Regulator } from "./regulators/regulator.ts";
 
 class Feature {
-  controllers: Controller[];
+  regulators: Regulator[] = [];
   constructor(
     public name: string,
-    ...controllers: Controller[]
-  ) {
-    this.controllers = controllers;
-  }
+  ) {}
 
   public async exec(): Promise<void> {
-    for (let c of this.controllers) {
-      await c.exec();
+    for (const rg of this.regulators) {
+      await rg.exec();
     }
   }
 }
 
-export function feature(name: string, ...controllers: Controller[]): Feature {
-  return new Feature(name, ...controllers);
+export function feature(name: string, ...Regulator: Regulator[]): Feature {
+  return new Feature(name, ...Regulator);
 }

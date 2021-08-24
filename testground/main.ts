@@ -12,7 +12,7 @@ async function main() {
   await neovix(
     //brew("fish"),
     //brew("neovim"),
-    dotfile("./templates/config.mustache", "./output/config.lua", { "a": 1 }),
+    dotfile("./templates", "./output", { "a": 1 }),
   );
 }
 
