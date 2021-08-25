@@ -1,0 +1,31 @@
+[core]
+	editor = nvim
+	sshcommand = ssh -i ~/.ssh/id_ed25519
+[user]
+	name = Nanozuki Crows
+	email = nanozuki.crows@gmail.com
+	signingkey = 2037F9D19C6BF918
+[diff]
+    tool = nvimdiff
+	renameLimit = 65535
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+[alias]
+	st = status
+	df = difftool
+	ci = commit -S
+	co = checkout
+	rb = rebase -i
+	aa = add .
+	tg = tag -s
+[include]
+    path = ~/.config/git/config_local
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
