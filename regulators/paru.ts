@@ -11,7 +11,7 @@ const storage = {
   },
 };
 
-export class Pacman {
+export class Paru {
   private packages: Set<string>;
 
   static setup(config: { bin: string }) {
@@ -29,8 +29,4 @@ export class Pacman {
       await execute(storage.bin, "-S", "--needed", pkg);
     }
   }
-}
-
-export function pacman(...pkgs: string[]): Pacman {
-  return new Pacman(...pkgs);
 }

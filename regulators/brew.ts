@@ -22,7 +22,7 @@ const storage = {
   },
 };
 
-export class Homebrew {
+export class Brew {
   private packages: Set<string>;
 
   public constructor(...pkgs: string[]) {
@@ -38,8 +38,4 @@ export class Homebrew {
       }
     }
   }
-}
-
-export function brew(...pkgs: string[]): Homebrew {
-  return new Homebrew(...pkgs);
 }

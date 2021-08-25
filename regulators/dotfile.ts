@@ -52,11 +52,3 @@ export class DotFile {
     await Deno.writeTextFile(filepath, content);
   }
 }
-
-export function dotfile(
-  source: string,
-  target: string,
-  value: Record<string, unknown> | undefined,
-): DotFile {
-  return new DotFile(source, target, value);
-}
