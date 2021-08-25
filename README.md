@@ -1,2 +1,2 @@
 # neovix
-Neovim enviroment and config management.
+Neovim enviroment and config management

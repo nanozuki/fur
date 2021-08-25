@@ -1,3 +1,3 @@
 export interface Regulator {
-  exec(): Promise<void>,
+  exec(): Promise<void>;
 }
