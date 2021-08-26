@@ -1,35 +1,50 @@
-import { Feature } from "../feature.ts";
-import { Set } from "../set.ts";
 import { Nvix } from "../nvix.ts";
-import { Brew } from "../regulators/brew.ts";
-import { Fisher } from "../regulators/fisher.ts";
-import { DotFile } from "../regulators/dotfile.ts";
+import { feature } from "../regulators/feature.ts";
+import { brew, brewNode } from "../regulators/brew.ts";
+import { npm } from "../regulators/npm.ts";
+import { fisher } from "../regulators/fisher.ts";
+import { dotFile } from "../regulators/dotfile.ts";
+import { pip } from "../regulators/pip.ts";
+import { gitPkg } from "../regulators/git_pkg.ts";
+import { Command } from "../util/command.ts";
 
-const basic = new Set(
-  new Brew("make", "tree", "direnv"),
+const basic = feature("basic", brew("make", "tree", "direnv"));
+
+const fish = feature(
+  "fish",
+  brew("fish"),
+  dotFile("./crowsenv/macos/fish", "./output/fish"),
+  fisher("oh-my-fish/theme-cbjohnson", "jethrokuan/fzf", "jethrokuan/z"),
 );
-const fish = new Set(
-  new Brew("fish"),
-  new DotFile("./crowsenv/macos/fish", "./output/fish"),
-  new Fisher("oh-my-fish/theme-cbjohnson", "jethrokuan/fzf", "jethrokuan/z"),
+const git = feature(
+  "git",
+  brew("git"),
+  dotFile("./crowsenv/macos/git/config", "./output/git/config"),
 );
-const git = new Set(
-  new Brew("git"),
-  new DotFile("./crowsenv/macos/git/config", "./output/git/config"),
+const tmux = feature(
+  "tmux",
+  brew("tmux"),
+  dotFile("./crowsenv/macos/tmux", "./output/tmux", { theme: "edge" }),
 );
-const tmux = new Set(
-  new Brew("tmux"),
-  new DotFile("./crowsenv/macos/tmux", "./output/tmux", { theme: "edge" }),
+const nvim = feature(
+  "neovim installing",
+  brew("nvim", "python", "node@14", "ripgrep", "fzf"),
+  brewNode(14),
+  pip("pynvim"),
+  npm("neovim"),
+  dotFile("./crowsenv/macos/nvim", "./output/nvim"),
 );
-const nvim = new Set(
-  new Brew("nvim", "python"),
-  // new Pip("pynvim")
-  new Feature("go")
-    .useRegulators(new Brew("go", "gopls"))
-    .usePlugins("ray-x/go.nvim"),
-  new Feature("rust"),
-  new Feature("zig"),
+const lua = feature(
+  "lua",
+  brew("ninja"),
+  gitPkg(
+    "https://github.com/sumneko/lua-language-server.git",
+    [
+      new Command("compile/install.sh").cwd("/3rd/luamake"),
+      new Command("./3rd/luamake/luamake", "rebuild"),
+    ],
+  ),
 );
 
-const neovix = new Nvix(basic, fish, git, tmux, nvim);
+const neovix = new Nvix(basic, fish, git, tmux, nvim, lua);
 await neovix.exec();

@@ -1,8 +1,9 @@
 import { execute } from "../util/command.ts";
+import { Regulator } from "./regulator.ts";
 
 const storage = {
   latest: false,
-  bin: "yay",
+  bin: "paru",
   init: async function (): Promise<void> {
     if (!this.latest) {
       await execute(this.bin, "-Syu");
@@ -11,22 +12,14 @@ const storage = {
   },
 };
 
-export class Paru {
-  private packages: Set<string>;
-
-  static setup(config: { bin: string }) {
-    storage.bin = config.bin;
-  }
-
-  public constructor(...pkgs: string[]) {
-    this.packages = new Set();
-    pkgs.forEach((pkg) => this.packages.add(pkg));
-  }
-
-  public async exec(): Promise<void> {
-    await storage.init();
-    for (const pkg of this.packages) {
-      await execute(storage.bin, "-S", "--needed", pkg);
-    }
-  }
+// TODO: install paru itself
+export function paru(...pkgs: string[]): Regulator {
+  return {
+    async exec(): Promise<void> {
+      await storage.init();
+      for (const pkg of pkgs) {
+        await execute(storage.bin, "-S", "--needed", pkg);
+      }
+    },
+  };
 }

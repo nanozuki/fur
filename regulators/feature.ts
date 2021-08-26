@@ -1,6 +1,18 @@
 import { Regulator } from "./regulators/regulator.ts";
 
+export function feature(name: string, ...regulators: Regulator[]): Regulator {
+  return {
+    async exec(): Promise<void> {
+      console.log(`build feature ${name}`);
+      for (const r of regulators) {
+        await r.exec();
+      }
+    },
+  };
+}
+
 // Feature for neovim feature
+/*
 export class Feature {
   regulators: Regulator[] = [];
   plugins: (string | Plugin)[] = [];
@@ -16,6 +28,7 @@ export class Feature {
     }
   }
 
+  /*
   useRegulators(...regulators: Regulator[]): Feature {
     this.regulators = this.regulators.concat(...regulators);
     return this;
@@ -41,8 +54,9 @@ export class Feature {
     this.config = config;
     return this;
   }
-}
+  */
 
+/*
 interface NeovimConfig {
   source: string;
   value: Record<string, unknown> | undefined;
@@ -55,3 +69,4 @@ interface Plugin {
 export function feature(name: string): Feature {
   return new Feature(name);
 }
+*/

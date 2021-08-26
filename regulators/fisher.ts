@@ -1,4 +1,5 @@
 import { Command } from "../util/command.ts";
+import { Regulator } from "./regulator.ts";
 
 const storage = {
   selfInstalled: false,
@@ -33,20 +34,16 @@ async function installFisher(): Promise<void> {
   return;
 }
 
-export class Fisher {
-  private plugins: Set<string>;
-  constructor(...plugins: string[]) {
-    this.plugins = new Set();
-    plugins.forEach((plugin) => this.plugins.add(plugin));
-  }
-
-  async exec(): Promise<void> {
-    await storage.init();
-    for (const plugin of this.plugins) {
-      if (!storage.installed.has(plugin)) {
-        await new Command("fish", "-c", `fisher install ${plugin}`).exec();
-        storage.installed.add(plugin);
+export function fisher(...plugins: string[]): Regulator {
+  return {
+    async exec(): Promise<void> {
+      await storage.init();
+      for (const plugin of plugins) {
+        if (!storage.installed.has(plugin)) {
+          await new Command("fish", "-c", `fisher install ${plugin}`).exec();
+          storage.installed.add(plugin);
+        }
       }
-    }
-  }
+    },
+  };
 }
