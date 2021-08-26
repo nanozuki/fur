@@ -2,45 +2,34 @@ import { Feature } from "../feature.ts";
 import { Set } from "../set.ts";
 import { Nvix } from "../nvix.ts";
 import { Brew } from "../regulators/brew.ts";
+import { Fisher } from "../regulators/fisher.ts";
 import { DotFile } from "../regulators/dotfile.ts";
-import { Command } from "../util/command.ts";
 
-async function macos() {
-  const basic = new Set(
-    new Brew("make", "tree", "direnv"), // TODO: cask
-    new Command(
-      "fish",
-      "-c",
-      "set PATH ~/.local/bin /opt/homebrew/bin /usr/local/bin /usr/bin /bin /usr/sbin /sbin /Library/Apple/usr/bin",
-    ), // TODO: move to fish set.
-  );
-  const fish = new Set(
-    new Brew("fish"),
-  );
-  const git = new Set();
-  const tmux = new Set();
-  const nvim = new Set();
-  const go = new Feature("go");
-  const rust = new Feature("rust");
-  const zig = new Feature("zig");
+const basic = new Set(
+  new Brew("make", "tree", "direnv"),
+);
+const fish = new Set(
+  new Brew("fish"),
+  new DotFile("./crowsenv/macos/fish", "./output/fish"),
+  new Fisher("oh-my-fish/theme-cbjohnson", "jethrokuan/fzf", "jethrokuan/z"),
+);
+const git = new Set(
+  new Brew("git"),
+  new DotFile("./crowsenv/macos/git/config", "./output/git/config"),
+);
+const tmux = new Set(
+  new Brew("tmux"),
+  new DotFile("./crowsenv/macos/tmux", "./output/tmux", { theme: "edge" }),
+);
+const nvim = new Set(
+  new Brew("nvim", "python"),
+  // new Pip("pynvim")
+  new Feature("go")
+    .useRegulators(new Brew("go", "gopls"))
+    .usePlugins("ray-x/go.nvim"),
+  new Feature("rust"),
+  new Feature("zig"),
+);
 
-  /*
-  const rust = new Feature("rust")
-    .useRegulators(
-      new Brew("rustup", "rust-analyzer"),
-      // rustup("nightly"),
-    )
-    .useConfigFile("./templates/neovim/rust.lua", {})
-    .useConfig(
-      "vim.cmd autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync(nil, 1000)",
-    );
-  const tmux = new Set(
-    new Brew("tmux"),
-    new DotFile("./templates/tmux", "~/.config/tmux", {}),
-  );
-  */
-  const neovix = new Nvix(basic, fish, git, tmux, nvim, go, rust, zig);
-  await neovix.exec();
-}
-
-await macos();
+const neovix = new Nvix(basic, fish, git, tmux, nvim);
+await neovix.exec();

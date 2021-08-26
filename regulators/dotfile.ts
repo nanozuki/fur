@@ -11,7 +11,7 @@ export class DotFile {
   constructor(
     public source: string,
     public target: string,
-    public value: Record<string, unknown> | undefined,
+    public value?: Record<string, unknown>,
   ) {}
 
   public async exec(): Promise<void> {

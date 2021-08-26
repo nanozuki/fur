@@ -11,13 +11,14 @@ const storage = {
     }
     if (this.installed.size === 0) {
       const list = (await output("brew", "list")).split("\n");
-      list.forEach((pkg) => {
-        this.installed.add(pkg);
-        const words = pkg.split("@");
-        if (words.length > 1) {
-          this.installed.add(words[0]);
-        }
-      });
+      list.forEach(this.add);
+    }
+  },
+  add(pkg: string) {
+    this.installed.add(pkg);
+    const words = pkg.split("@");
+    if (words.length > 1) {
+      this.installed.add(words[0]);
     }
   },
 };
@@ -35,6 +36,7 @@ export class Brew {
     for (const pkg of this.packages) {
       if (!storage.installed.has(pkg)) {
         await execute("brew", "install", pkg);
+        storage.add(pkg);
       }
     }
   }

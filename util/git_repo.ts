@@ -58,7 +58,7 @@ export class GitRepo {
         "pull",
         "--recurse-submodules",
         "--update-shallow",
-      ).execute();
+      ).exec();
       const curCommit = await new Command("git", "rev-parse", "@").cwd(path)
         .output();
       result.update = curCommit !== prevCommit;
