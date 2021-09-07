@@ -1,4 +1,4 @@
-import { Regulator } from "./regulators/regulator.ts";
+import { Regulator } from "./regulator.ts";
 
 export function feature(name: string, ...regulators: Regulator[]): Regulator {
   return {

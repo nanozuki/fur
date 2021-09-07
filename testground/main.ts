@@ -1,4 +1,4 @@
-import { Nvix } from "../nvix.ts";
+import { Fur } from "../fur.ts";
 import { feature } from "../regulators/feature.ts";
 import { brew, brewNode } from "../regulators/brew.ts";
 import { npm } from "../regulators/npm.ts";
@@ -46,5 +46,5 @@ const lua = feature(
   ),
 );
 
-const neovix = new Nvix(basic, fish, git, tmux, nvim, lua);
-await neovix.exec();
+const fur = new Fur(basic, fish, git, tmux, nvim, lua);
+await fur.exec();

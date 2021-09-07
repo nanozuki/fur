@@ -1,6 +1,6 @@
 import { Regulator } from "./regulators/regulator.ts";
 
-export class Nvix {
+export class Fur {
   regulators: Regulator[];
   constructor(...regulators: Regulator[]) {
     this.regulators = regulators;
