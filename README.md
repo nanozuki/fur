@@ -1,2 +1,2 @@
-# neovix
-Neovim enviroment and config management
+# fur
+Environment **f**eat**ur**es and configs management. 
