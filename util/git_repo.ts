@@ -19,7 +19,7 @@ function getGitRepoPath(prefix: string, url: string): string {
 }
 
 export class GitRepo {
-  static cachePath = "~/.cache/neovix/git";
+  static cachePath = "~/.cache/fur/git";
 
   static setup(config: { cache: string }) {
     GitRepo.cachePath = config.cache;
