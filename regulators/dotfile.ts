@@ -22,6 +22,15 @@ export function dotFile(
   };
 }
 
+export function symlink(source: string, target: string): Regulator {
+  return {
+    async exec(): Promise<void> {
+      await Deno.symlink(source, target);
+      return;
+    },
+  };
+}
+
 async function execSource(
   source: string,
   target: string,
