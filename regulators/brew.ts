@@ -13,7 +13,7 @@ const storage = {
     }
     if (this.installed.size === 0) {
       const list = (await output("brew", "list")).split("\n");
-      list.forEach(this.add);
+      list.forEach((pkg) => this.add(pkg));
     }
   },
   add(pkg: string) {
