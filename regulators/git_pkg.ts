@@ -1,22 +1,23 @@
 import { Command } from "../util/command.ts";
 import { GitRepo } from "../util/git_repo.ts";
+import { Regulator } from "./regulator.ts";
 
 // Git package for binary whitch build in git repo
-export class GitPkg {
-  constructor(
-    public remote: string,
-    public commands: Command[],
-    public opt?: { branch?: string },
-  ) {}
-
-  async exec(): Promise<void> {
-    const repo = new GitRepo(this.remote, this.opt);
-    const result = await repo.sync();
-    if (result.update) {
-      for (const c of this.commands) {
-        await c.execute();
+export function gitPkg(
+  remote: string,
+  commands: Command[],
+  opt?: { branch?: string },
+): Regulator {
+  return {
+    async exec(): Promise<void> {
+      const repo = new GitRepo(remote, opt);
+      const result = await repo.sync();
+      if (result.update) {
+        for (const c of commands) {
+          await c.exec();
+        }
       }
-    }
-    return;
-  }
+      return;
+    },
+  };
 }

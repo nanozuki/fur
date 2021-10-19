@@ -20,7 +20,7 @@ export class Command {
     const status = await process.status();
     return status.success;
   }
-  async execute(): Promise<void> {
+  async exec(): Promise<void> {
     this.opt.stderr = "piped";
     const process = Deno.run(this.opt);
     const status = await process.status();
@@ -48,7 +48,7 @@ async function output(...command: string[]): Promise<string> {
 }
 
 async function execute(...command: string[]): Promise<void> {
-  return (await new Command(...command).execute());
+  return (await new Command(...command).exec());
 }
 
 async function status(...command: string[]) {

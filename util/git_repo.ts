@@ -19,7 +19,7 @@ function getGitRepoPath(prefix: string, url: string): string {
 }
 
 export class GitRepo {
-  static cachePath = "~/.cache/neovix/git";
+  static cachePath = "~/.cache/fur/git";
 
   static setup(config: { cache: string }) {
     GitRepo.cachePath = config.cache;
@@ -58,7 +58,7 @@ export class GitRepo {
         "pull",
         "--recurse-submodules",
         "--update-shallow",
-      ).execute();
+      ).exec();
       const curCommit = await new Command("git", "rev-parse", "@").cwd(path)
         .output();
       result.update = curCommit !== prevCommit;

@@ -1,4 +1,6 @@
 import { execute, output } from "../util/command.ts";
+import { Regulator } from "../regulators/regulator.ts";
+import { Command } from "../util/command.ts";
 
 const storage = {
   installed: new Set<string>(),
@@ -11,31 +13,42 @@ const storage = {
     }
     if (this.installed.size === 0) {
       const list = (await output("brew", "list")).split("\n");
-      list.forEach((pkg) => {
-        this.installed.add(pkg);
-        const words = pkg.split("@");
-        if (words.length > 1) {
-          this.installed.add(words[0]);
-        }
-      });
+      list.forEach(this.add);
+    }
+  },
+  add(pkg: string) {
+    this.installed.add(pkg);
+    const words = pkg.split("@");
+    if (words.length > 1) {
+      this.installed.add(words[0]);
     }
   },
 };
 
-export class Brew {
-  private packages: Set<string>;
+export function brew(...pkgs: string[]): Regulator {
+  return {
+    async exec(): Promise<void> {
+      await storage.init();
+      for (const pkg of pkgs) {
+        if (!storage.installed.has(pkg)) {
+          await execute("brew", "install", pkg);
+          storage.add(pkg);
+        }
+      }
+    },
+  };
+}
 
-  public constructor(...pkgs: string[]) {
-    this.packages = new Set();
-    pkgs.forEach((pkg) => this.packages.add(pkg));
-  }
-
-  public async exec(): Promise<void> {
-    await storage.init();
-    for (const pkg of this.packages) {
+export function brewNode(version: number): Regulator {
+  const pkg = `node@${version}`;
+  return {
+    async exec(): Promise<void> {
+      await storage.init();
       if (!storage.installed.has(pkg)) {
         await execute("brew", "install", pkg);
+        storage.add(pkg);
+        await new Command("brew", "link", "--force", "node@14").exec();
       }
-    }
-  }
+    },
+  };
 }
