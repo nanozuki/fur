@@ -1,3 +1,3 @@
 # fur
 
-Environment **f**eat**ur**es and configs management. 
+Declarative maintenance and management for packages in system and various programming languages.
