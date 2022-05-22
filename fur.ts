@@ -1,4 +1,4 @@
-import { Regulator } from "./regulators/regulator.ts";
+import { Regulator } from './regulators/regulator.ts';
 
 export class Fur {
   regulators: Regulator[];

@@ -1,0 +1,122 @@
+{
+  "env": {
+    "XDG_CONFIG_HOME": "$HOME/.config",
+    "XDG_CACHE_HOME": "$HOME/.cache",
+    "XDG_DATA_HOME": "$HOME/.local/share",
+    "LC_ALL": "en_US.UTF-8",
+    "LANG": "en_US.UTF-8",
+    "EDITOR": "nvim"
+  },
+  "path": [
+    "/usr/local/bin",
+    "/usr/bin",
+    "/bin",
+    "/usr/local/sbin",
+    "/usr/sbin",
+    "/sbin"
+  ],
+  "paru": {
+    "use": "paru-bin",
+    "env": {
+      "GNUPGHOME": "$XDG_DATA_HOME/gnupg"
+    },
+    "packages": [
+      "direnv",
+      "exa",
+      "bat",
+      "btop",
+      "starship",
+      "tmux",
+      "wezterm",
+      "gnupg",
+      "pinentry",
+      "gopls",
+      "golangci-lint",
+      "rust-analyzer",
+      "lua-language-server",
+      "stylua",
+      "zig",
+      "zls-bin",
+      "deno",
+      "terraform",
+      "terraform-ls",
+      "neovim",
+      "python-pynvim",
+      "ripgrep",
+      "fzf",
+      "fcitx5-rime"
+    ]
+  },
+  "fisher": {
+    "packages": ["jethrokuan/z", "PatrickF1/fzf.fish"]
+  },
+  "goinstall": {
+    "env": {
+      "GOPATH": "$XDG_DATA_HOME/go"
+    },
+    "path": ["$GOPATH/bin"],
+    "packages": [
+      "github.com/cweill/gotests/...@latest",
+      "github.com/davidrjenni/reftools/cmd/fillstruct@latest",
+      "github.com/fatih/gomodifytags@latest",
+      "github.com/go-swagger/go-swagger/cmd/swagger@latest",
+      "github.com/golang/protobuf/{proto,protoc-gen-go}@latest",
+      "github.com/google/wire/cmd/wire@latest",
+      "github.com/nametake/golangci-lint-langserver@latest",
+      "github.com/segmentio/golines@latest",
+      "golang.org/x/tools/cmd/goimports@latest",
+      "google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest",
+      "google.golang.org/protobuf/cmd/protoc-gen-go@latest"
+    ]
+  },
+  "cargo": {
+    "install_by": "rustup",
+    "env": {
+      "CARGO_HOME": "$XDG_DATA_HOME/cargo",
+      "RUSTUP_HOME": "$XDG_DATA_HOME/rustup"
+    },
+    "path": ["$CARGO_HOME/bin"]
+  },
+  "npm": {
+    "env": {
+      "NPM_CONFIG_USERCONFIG": "$XDG_CONFIG_HOME/npm/npmrc"
+    },
+    "path": ["$XDG_DATA_HOME/npm/bin"],
+    "node_version": "lts",
+    "config": {
+      "prefix": "$XDG_DATA_HOME/npm",
+      "cache": "$XDG_CACHE_HOME/npm",
+      "tmp": "$XDG_RUNTIME_DIR/npm",
+      "init-module": "$XDG_CONFIG_HOME/npm/config/npm-init.js"
+    },
+    "package": [
+      "@tailwindcss/language-server",
+      "graphql-language-service-cli",
+      "neovim",
+      "npm_install",
+      "typescript",
+      "typescript-language-server",
+      "vim-language-server",
+      "yaml-language-server"
+    ]
+  },
+  "source": {
+    "env": {
+      "rime_frontend": "fcitx5-rime"
+    },
+    "path": ["~/.local/bin", "$XDG_DATA_HOME/plum"],
+    "packages": [
+      {
+        "repo": "https://github.com/rime/plum.git",
+        "build": [
+          "rime-install :preset",
+          "rime-install prelude",
+          "rime-install essay",
+          "rime-install luna-pinyin",
+          "rime-install double-pinyin",
+          "rime-install emoji"
+        ]
+      }
+    ]
+  }
+}
